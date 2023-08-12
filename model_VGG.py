@@ -15,13 +15,14 @@ test_data = test_data/255
 
 base_model = VGG16(weights='imagenet', include_top=False, input_shape = (32,32,3))
 
-for layer in base_model.layers:
+for layer in base_model.layers[:-4]:
     layer.trainable = False
 
 x = base_model.output
 
 x = GlobalAveragePooling2D()(x)
 x = Dense(512, activation = 'relu')(x)
+x = Dropout(0.5)(x)
 predictions = Dense(100, activation='softmax')(x)
 
 model = Model(inputs=base_model.input, outputs = predictions)
@@ -40,9 +41,10 @@ datagen = ImageDataGenerator(
 )
 datagen.fit(train_data)
 
-history = model.fit(datagen.flow(train_data, train_labels, batch_size=512),
+history = model.fit(datagen.flow(train_data, train_labels, batch_size=64),
     epochs=6,
-    validation_data=(test_data, test_labels)
+    validation_data=(test_data, test_labels),
+    validation_split = 0.2
 )
 test_loss, accuracy = model.evaluate(test_data, test_labels)
 print(f"Test Accuracy : {accuracy*100:.2f}%")
