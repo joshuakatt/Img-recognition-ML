@@ -14,7 +14,7 @@ EPOCHS = 10
 VALIDATION_RATIO = 0.2
 VERBOSE_MODE = 1
 LOSS = sparse_categorical_crossentropy
-OPTIMIZER = Adam()
+OPTIMIZER = Adam() #Adam performs better than RMS so far
 
 # Get CIFAR-100 dataset
 (train_imgs, train_labels), (test_imgs, test_labels) = cifar100.load_data()
